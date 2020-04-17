@@ -14,6 +14,7 @@ public interface RestMethods {
     //Http 다시 공부하시기
     // 동훈님 문서 보는 방법은 음.................음..?음.........언제설명하지 ..
     //갓뎀..
+
     @FormUrlEncoded //요 녀석이 바로 application/x-www-form-urlencoded 얘를 뜻하는 놈
     @POST("v1/auth/login")
     Call<LoginData> login(@Field("nickname") String name, @Field("password") String password);
@@ -22,3 +23,4 @@ public interface RestMethods {
     @POST("v1/auth/register")
     Call<LoginData> register(@Query("nickname") String name, @Query("password") String password);
 }
+

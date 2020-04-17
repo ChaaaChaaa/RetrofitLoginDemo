@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void bringName() {
-         //Intent intent = getIntent();
+        //Intent intent = getIntent();
         String name =getIntent().getExtras().getString("name");
 
         if(!Const.isNullOrEmptyString(name)){
