@@ -40,17 +40,16 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
-        //Builds HTTP Client for API Calls
         restMethods = RestClient.buildHTTPClient();
 
-        //Binds UI to Activity
+
         setContent();
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                //Will validate & call Login API
+
                 doRegister();
             }
         });
@@ -84,9 +83,9 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<LoginData> call, @NonNull Response<LoginData> response) {
 
-                Toast.makeText( getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT ).show();
-                Intent intent = new Intent( RegisterActivity.this, LoginActivity.class );
-                startActivity( intent );
+                Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
 
                 Log.i(TAG, "Response: " + response.body());
                 hideLoading();
@@ -94,7 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<LoginData> call, @NonNull Throwable t) {
-                Toast.makeText( getApplicationContext(), "회원가입 실패", Toast.LENGTH_SHORT ).show();
+                Toast.makeText(getApplicationContext(), "회원가입 실패", Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
                 Log.e(TAG, "Response: " + t.getMessage());
                 hideLoading();

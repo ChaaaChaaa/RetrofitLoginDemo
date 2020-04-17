@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout passwordInput;
 
     private ProgressBar progressBar;
-    private  NestedScrollView loginForm;
+    private NestedScrollView loginForm;
 
     private RestMethods restMethods;
 
@@ -46,16 +45,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
-        //Builds HTTP Client for API Calls
+
         restMethods = RestClient.buildHTTPClient();
 
-        //Binds UI to Activity
         setContent();
 
         tryToRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });
@@ -65,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //Will validate & call Login API
+
                 doLogin();
             }
         });
@@ -81,8 +79,6 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.input_password);
         tryToRegister = findViewById(R.id.signup_go);
     }
-
-
 
 
     void doLogin() {
@@ -101,8 +97,8 @@ public class LoginActivity extends AppCompatActivity {
         restMethods.login(name.getText().toString(), password.getText().toString()).enqueue(new Callback<LoginData>() {
             @Override
             public void onResponse(@NonNull Call<LoginData> call, @NonNull Response<LoginData> response) {
-                Toast.makeText( getApplicationContext(), "로그인 성공", Toast.LENGTH_SHORT ).show();
-                Intent intent = new Intent( LoginActivity.this, MainActivity.class );
+                Toast.makeText(getApplicationContext(), "로그인 성공", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
                 Log.i(TAG, "Response: " + response.body());
                 hideLoading();
@@ -110,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<LoginData> call, @NonNull Throwable t) {
-                Toast.makeText( getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT ).show();
+                Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
                 Log.e(TAG, "Response: " + t.getMessage());
                 hideLoading();

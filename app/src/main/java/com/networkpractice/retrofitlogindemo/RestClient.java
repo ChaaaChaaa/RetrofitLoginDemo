@@ -18,7 +18,7 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
 public class RestClient {
     public static RestMethods buildHTTPClient() {
 
-        //TODO Replace with your URL [Must have backslash '/' in end]
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://question.api-namu.kro.kr:3000/")
                 .client(getClient())
@@ -28,14 +28,14 @@ public class RestClient {
         return retrofit.create(RestMethods.class);
     }
 
-    //Create OKHttp Client used by retrofit
+
     private static OkHttpClient getClient() {
         return new OkHttpClient.Builder()
                 .addInterceptor(provideHttpLoggingInterceptor())
                 .build();
     }
 
-    //Attach logging intercept to print Logs in LogCat
+
     private static HttpLoggingInterceptor provideHttpLoggingInterceptor() {
         HttpLoggingInterceptor httpLoggingInterceptor =
                 new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {

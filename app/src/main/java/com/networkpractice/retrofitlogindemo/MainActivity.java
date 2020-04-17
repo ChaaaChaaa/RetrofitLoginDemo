@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void bringName(){
+    void bringName() {
         Intent intent = getIntent();
         String userName = intent.getStringExtra("userName");
         getName.setText(userName);
