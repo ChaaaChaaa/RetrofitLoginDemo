@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_activity);
+        setContentView(R.layout.main_activity);
         getName = findViewById(R.id.getName);
 
         bringName();
@@ -20,9 +20,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void bringName(){
-        Intent intent = getIntent();
-        String userName = intent.getStringExtra("userName");
-        getName.setText(userName);
+    void bringName() {
+         //Intent intent = getIntent();
+        String name =getIntent().getExtras().getString("name");
+
+        if(!Const.isNullOrEmptyString(name)){
+            getName.setText(name);
+        }
+        else{
+            getName.setText("값 없으셈 null이거나 empty임 ");
+        }
     }
 }

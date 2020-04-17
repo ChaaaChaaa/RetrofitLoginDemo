@@ -16,8 +16,14 @@ android {
 
     buildTypes {
         release {
+            buildConfigField "String", "BASEURL", "\"http://question.api-namu.kro.kr:3000/\""
+
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            buildConfigField "String", "BASEURL", "\"http://question.api-namu.kro.kr:3000/\""
         }
     }
 
