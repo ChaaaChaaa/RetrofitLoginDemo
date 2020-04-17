@@ -23,6 +23,9 @@ import retrofit2.Response;
 public class RegisterActivity extends AppCompatActivity {
     private String TAG = RegisterActivity.class.getSimpleName();
 
+    // 아악 아악 findviewBy ID!!!!!!!!!!!!!!!!
+    //ㅋㅋㅋ 괜찮아요 편한대로 쓰세요, 두분 다 다만 데바쓰는게 조금 많이 편해질거에요.
+
     AppCompatEditText name;
     AppCompatEditText password;
     AppCompatButton registerButton;

@@ -20,10 +20,12 @@ public class RestClient {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://question.api-namu.kro.kr:3000/")
+                //잘 보세용 이런건 스킬이에요 .
+               // .baseUrl("http://question.api-namu.kro.kr:3000/")
+                .baseUrl(BuildConfig.BASEURL)
                 .client(getClient())
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         return retrofit.create(RestMethods.class);
     }
