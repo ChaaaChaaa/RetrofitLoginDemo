@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements Button.OnClickListener {
     private String TAG = LoginActivity.class.getSimpleName();
 
     private AppCompatEditText name;
@@ -59,8 +60,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void initValues() {
         restMethods = RestClient.buildHTTPClient();
-
-
     }
 
     void setContent() {
@@ -74,24 +73,24 @@ public class LoginActivity extends AppCompatActivity {
         tryToRegister = findViewById(R.id.signup_go);
     }
 
-
-    public void setListener() {
-        tryToRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doLogin();
-            }
-        });
+    private void setListener(){
+        tryToRegister.setOnClickListener(this);
+        loginButton.setOnClickListener(this);
     }
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.signup_go:
+             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+             startActivity(intent);
+
+            case R.id.name_sign_in_button:
+                doLogin();
+        }
+    }
+
     //peony
     //123456789
 
@@ -162,4 +161,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
+
+
 }

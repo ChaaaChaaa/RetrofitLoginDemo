@@ -21,6 +21,6 @@ public interface RestMethods {
 
     @FormUrlEncoded
     @POST("v1/auth/register")
-    Call<LoginData> register(@Query("nickname") String name, @Query("password") String password);
+    Call<RegisterData> register(@Field("nickname") String name, @Field("password") String password);
 }
 

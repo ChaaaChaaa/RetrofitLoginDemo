@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -20,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements Button.OnClickListener{
     private String TAG = RegisterActivity.class.getSimpleName();
 
     // 아악 아악 findviewBy ID!!!!!!!!!!!!!!!!
@@ -41,21 +42,14 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_activity);
+        setContentView(R.layout.register_activity);
 
         restMethods = RestClient.buildHTTPClient();
 
 
         setContent();
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                doRegister();
-            }
-        });
+        registerButton.setOnClickListener(this);
     }
 
     void setContent() {
@@ -66,6 +60,11 @@ public class RegisterActivity extends AppCompatActivity {
         registerForm = findViewById(R.id.register_form);
         nameInput = findViewById(R.id.input_name_register);
         passwordInput = findViewById(R.id.input_password_register);
+    }
+
+    @Override
+    public void onClick(View view) {
+        doRegister();
     }
 
 
@@ -82,9 +81,9 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         showLoading();
-        restMethods.login(name.getText().toString(), password.getText().toString()).enqueue(new Callback<LoginData>() {
+        restMethods.register(name.getText().toString(), password.getText().toString()).enqueue(new Callback<RegisterData>() {
             @Override
-            public void onResponse(@NonNull Call<LoginData> call, @NonNull Response<LoginData> response) {
+            public void onResponse(@NonNull Call<RegisterData> call, @NonNull Response<RegisterData> response) {
 
                 Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -95,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<LoginData> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<RegisterData> call, @NonNull Throwable t) {
                 Toast.makeText(getApplicationContext(), "회원가입 실패", Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
                 Log.e(TAG, "Response: " + t.getMessage());
@@ -114,4 +113,6 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
         registerForm.setVisibility(View.VISIBLE);
     }
+
+
 }
