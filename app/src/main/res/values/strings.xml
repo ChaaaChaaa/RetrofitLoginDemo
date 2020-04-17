@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">RetrofitLoginDemo</string>
+    <string name="prompt_name">Name</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in_short">action_sign_in_short</string>
+    <string name="ask_register">회원이 아니신가요?</string>
+    <string name="action_sign_in">Login</string>
+    <string name="action_register">Register</string>
+    <string name="welcome">로그인하셨습니다.</string>
+
+
+</resources>
