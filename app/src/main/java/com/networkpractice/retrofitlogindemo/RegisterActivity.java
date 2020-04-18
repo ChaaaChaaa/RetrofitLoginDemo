@@ -21,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RegisterActivity extends AppCompatActivity implements Button.OnClickListener{
+public class RegisterActivity extends AppCompatActivity implements Button.OnClickListener {
     private String TAG = RegisterActivity.class.getSimpleName();
 
     // 아악 아악 findviewBy ID!!!!!!!!!!!!!!!!
@@ -39,16 +39,16 @@ public class RegisterActivity extends AppCompatActivity implements Button.OnClic
 
     RestMethods restMethods;
 
+    private String registerName;
+    private String registerPwd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_activity);
 
         restMethods = RestClient.buildHTTPClient();
-
-
         setContent();
-
         registerButton.setOnClickListener(this);
     }
 
@@ -69,50 +69,57 @@ public class RegisterActivity extends AppCompatActivity implements Button.OnClic
 
 
     void doRegister() {
-        if (TextUtils.isEmpty(name.getText().toString())) {
+        registerName = name.getText().toString();
+        registerPwd = password.getText().toString();
+
+        if (!Const.isNullOrEmptyString(registerName, registerPwd)) {
+            showLoading(true);
+            restMethods.register(registerName, registerPwd).enqueue(new Callback<RegisterData>() {
+                @Override
+                public void onResponse(@NonNull Call<RegisterData> call, @NonNull Response<RegisterData> response) {
+                    if (response.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                        Log.i(TAG, "Response: " + response.body());
+                    } else {
+                        Toast.makeText(getApplicationContext(), "회원가입 실패", Toast.LENGTH_SHORT).show();
+                    }
+                    showLoading(false);
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<RegisterData> call, @NonNull Throwable t) {
+                }
+
+            });
+        } else {
+            checkNullOrEmpty();
+        }
+    }
+
+    private void checkNullOrEmpty() {
+        if (Const.isNullOrEmptyString(name.getText().toString())) {
             nameInput.setError("아이디가 입력되지 않았습니다.");
             return;
         }
 
-        if (TextUtils.isEmpty(password.getText().toString())) {
+        if (Const.isNullOrEmptyString(password.getText().toString())) {
             passwordInput.setError("비밀번호가 입력되지 않았습니다.");
             return;
         }
-
-
-        showLoading();
-        restMethods.register(name.getText().toString(), password.getText().toString()).enqueue(new Callback<RegisterData>() {
-            @Override
-            public void onResponse(@NonNull Call<RegisterData> call, @NonNull Response<RegisterData> response) {
-
-                Toast.makeText(getApplicationContext(), "회원가입 성공", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(intent);
-
-                Log.i(TAG, "Response: " + response.body());
-                hideLoading();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<RegisterData> call, @NonNull Throwable t) {
-                Toast.makeText(getApplicationContext(), "회원가입 실패", Toast.LENGTH_SHORT).show();
-                t.printStackTrace();
-                Log.e(TAG, "Response: " + t.getMessage());
-                hideLoading();
-            }
-        });
     }
 
 
-    private void showLoading() {
-        progressBar.setVisibility(View.VISIBLE);
-        registerForm.setVisibility(View.GONE);
+    private void showLoading(boolean state) {
+        if (state) {
+            progressBar.setVisibility(View.VISIBLE);
+            registerForm.setVisibility(View.GONE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            registerForm.setVisibility(View.VISIBLE);
+        }
+
     }
-
-    private void hideLoading() {
-        progressBar.setVisibility(View.GONE);
-        registerForm.setVisibility(View.VISIBLE);
-    }
-
-
 }

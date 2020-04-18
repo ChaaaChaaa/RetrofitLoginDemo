@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.widget.NestedScrollView;
+import androidx.databinding.DataBindingUtil;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,17 +19,17 @@ import android.widget.Toast;
 
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.networkpractice.retrofitlogindemo.databinding.LoginActivityBinding;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity implements Button.OnClickListener {
+public class LoginActivity extends AppCompatActivity {
     private String TAG = LoginActivity.class.getSimpleName();
 
     private AppCompatEditText name;
     private AppCompatEditText password;
-    private AppCompatButton loginButton;
 
 
     private TextInputLayout nameInput;
@@ -39,54 +40,47 @@ public class LoginActivity extends AppCompatActivity implements Button.OnClickLi
 
     private RestMethods restMethods;
 
-    private TextView tryToRegister;
-
     private String userName;
     private String userPwd;
+
+    LoginActivityBinding loginActivityBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-
+        loginActivityBinding = DataBindingUtil.setContentView(this, R.layout.login_activity);
+        loginActivityBinding.setActivity(this);
 
         //라이프 사이클 내부에서는 가장 간단하게 코드 작성할 것
         // 기본적으로 펑션을 목적을 가지고 작은 단위로 쪼갤 것
 
         initValues();
         setContent();
-        setListener();
     }
 
     public void initValues() {
         restMethods = RestClient.buildHTTPClient();
     }
 
+
     void setContent() {
-        loginButton = findViewById(R.id.name_sign_in_button);
         name = findViewById(R.id.name);
         password = findViewById(R.id.password);
         progressBar = findViewById(R.id.login_progress);
         loginForm = findViewById(R.id.login_form);
         nameInput = findViewById(R.id.input_name);
         passwordInput = findViewById(R.id.input_password);
-        tryToRegister = findViewById(R.id.signup_go);
-    }
-
-    private void setListener(){
-        tryToRegister.setOnClickListener(this);
-        loginButton.setOnClickListener(this);
     }
 
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.signup_go:
-             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-             startActivity(intent);
+    public void onButtonClick(View view) {
+        switch (view.getId()) {
+            case R.id.tryToRegister:
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
 
-            case R.id.name_sign_in_button:
+            case R.id.loginButton:
                 doLogin();
         }
     }
@@ -100,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements Button.OnClickLi
         if (!Const.isNullOrEmptyString(userName, userPwd)) {
             showLoading(true);
 
-            restMethods.login(userName,userPwd).enqueue(new Callback<LoginData>() {
+            restMethods.login(userName, userPwd).enqueue(new Callback<LoginData>() {
                 @Override
                 public void onResponse(@NonNull Call<LoginData> call, @NonNull Response<LoginData> response) {
                     //모든 네트워킹에는 success /  fail 구분하여 분기할 것
@@ -118,8 +112,7 @@ public class LoginActivity extends AppCompatActivity implements Button.OnClickLi
 
                         Log.i(TAG, "Response: " + response.body());
                     } else {
-                        Toast.makeText(getApplicationContext(), "응 해킹범 꺼졍", Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
                     }
 
                     showLoading(false);
@@ -127,26 +120,27 @@ public class LoginActivity extends AppCompatActivity implements Button.OnClickLi
 
                 @Override
                 public void onFailure(@NonNull Call<LoginData> call, @NonNull Throwable t) {
-                    Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
-                    t.printStackTrace();
-                    Log.e(TAG, "Response: " + t.getMessage());
-                    showLoading(false);
+
                 }
             });
         } else {
-            if (Const.isNullOrEmptyString(name.getText().toString())) { //당연하게 String은 null / empty둘다 해야합니다.
-                nameInput.setError("아이디가 입력되지 않았습니다.");
-                return;
-            }
-
-            if (Const.isNullOrEmptyString(password.getText().toString())) {
-                passwordInput.setError("비밀번호가 입력되지 않았습니다.");
-                return;
-            }
+            checkNullOrEmpty();
 
         }
 
 
+    }
+
+    private void checkNullOrEmpty() {
+        if (Const.isNullOrEmptyString(name.getText().toString())) {
+            nameInput.setError("아이디가 입력되지 않았습니다.");
+            return;
+        }
+
+        if (Const.isNullOrEmptyString(password.getText().toString())) {
+            passwordInput.setError("비밀번호가 입력되지 않았습니다.");
+            return;
+        }
     }
 
 

@@ -20,7 +20,7 @@ public interface RestMethods {
     Call<LoginData> login(@Field("nickname") String name, @Field("password") String password);
 
     @FormUrlEncoded
-    @POST("v1/auth/register")
+    @POST("v1//users")
     Call<RegisterData> register(@Field("nickname") String name, @Field("password") String password);
 }
 
