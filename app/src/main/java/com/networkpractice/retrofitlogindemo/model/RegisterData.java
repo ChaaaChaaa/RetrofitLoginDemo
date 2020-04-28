@@ -1,4 +1,4 @@
-package com.networkpractice.retrofitlogindemo;
+package com.networkpractice.retrofitlogindemo.model;
 
 public class RegisterData {
     String registerName;

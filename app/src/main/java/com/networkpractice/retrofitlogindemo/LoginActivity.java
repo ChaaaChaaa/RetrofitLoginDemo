@@ -2,24 +2,26 @@ package com.networkpractice.retrofitlogindemo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.widget.NestedScrollView;
 import androidx.databinding.DataBindingUtil;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.networkpractice.retrofitlogindemo.model.AccountData;
+import com.networkpractice.retrofitlogindemo.model.LoginData;
 import com.networkpractice.retrofitlogindemo.databinding.LoginActivityBinding;
+import com.networkpractice.retrofitlogindemo.service.RestClient;
+import com.networkpractice.retrofitlogindemo.service.RestMethods;
+
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,6 +29,9 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private String TAG = LoginActivity.class.getSimpleName();
+
+    private static LoginActivity instance;
+    private SharedPreferenceConfig preferenceConfig;
 
     private AppCompatEditText name;
     private AppCompatEditText password;
@@ -41,14 +46,15 @@ public class LoginActivity extends AppCompatActivity {
     private RestMethods restMethods;
 
     private String userName;
-    private String userPwd;
 
     LoginActivityBinding loginActivityBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         setContentView(R.layout.login_activity);
+        //preferenceConfig = new SharedPreferenceConfig(getApplicationContext());
         loginActivityBinding = DataBindingUtil.setContentView(this, R.layout.login_activity);
         loginActivityBinding.setActivity(this);
 
@@ -73,6 +79,14 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.input_password);
     }
 
+//    void checkSharedPreference(){
+//        if(preferenceConfig.readLoginStatus()){
+//            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
+//    }
+
 
     public void onButtonClick(View view) {
         switch (view.getId()) {
@@ -89,8 +103,8 @@ public class LoginActivity extends AppCompatActivity {
     //123456789
 
     void doLogin() {
-        userName = name.getText().toString();
-        userPwd = password.getText().toString();
+        userName = Objects.requireNonNull(name.getText()).toString();
+        String userPwd = Objects.requireNonNull(password.getText()).toString();
         if (!Const.isNullOrEmptyString(userName, userPwd)) {
             showLoading(true);
 
@@ -99,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(@NonNull Call<LoginData> call, @NonNull Response<LoginData> response) {
                     //모든 네트워킹에는 success /  fail 구분하여 분기할 것
                     if (response.isSuccessful()) {
+                        LoginData loginData = response.body();
                         Toast.makeText(getApplicationContext(), "로그인 성공", Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -108,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                         intent.putExtras(bundle);
 
                         startActivity(intent);
+                        //preferenceConfig.writeLoginStatus(true);
                         finish();
 
                         Log.i(TAG, "Response: " + response.body());
@@ -120,26 +136,22 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NonNull Call<LoginData> call, @NonNull Throwable t) {
-
+                    Log.e("sdfsdfdfs",t.getLocalizedMessage());
                 }
             });
         } else {
             checkNullOrEmpty();
-
         }
-
-
     }
 
     private void checkNullOrEmpty() {
-        if (Const.isNullOrEmptyString(name.getText().toString())) {
+        if (Const.isNullOrEmptyString(Objects.requireNonNull(name.getText()).toString())) {
             nameInput.setError("아이디가 입력되지 않았습니다.");
             return;
         }
 
-        if (Const.isNullOrEmptyString(password.getText().toString())) {
+        if (Const.isNullOrEmptyString(Objects.requireNonNull(password.getText()).toString())) {
             passwordInput.setError("비밀번호가 입력되지 않았습니다.");
-            return;
         }
     }
 
@@ -154,6 +166,10 @@ public class LoginActivity extends AppCompatActivity {
             loginForm.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    public static LoginActivity getInstance(){
+        return instance;
     }
 
 

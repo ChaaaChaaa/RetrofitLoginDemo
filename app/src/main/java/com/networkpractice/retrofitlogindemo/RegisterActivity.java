@@ -2,7 +2,6 @@ package com.networkpractice.retrofitlogindemo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +15,9 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.widget.NestedScrollView;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.networkpractice.retrofitlogindemo.model.RegisterData;
+import com.networkpractice.retrofitlogindemo.service.RestClient;
+import com.networkpractice.retrofitlogindemo.service.RestMethods;
 
 import retrofit2.Call;
 import retrofit2.Callback;

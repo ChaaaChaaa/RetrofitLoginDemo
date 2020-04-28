@@ -7,6 +7,7 @@
     <string name="action_sign_in">Login</string>
     <string name="action_register">Register</string>
     <string name="welcome">로그인하셨습니다.</string>
-
-
+    <string name="logout">LOGOUT</string>
+    <string name="login_preference">com.networkpractice.retrofitlogindemo_login_preference</string>
+    <string name="login_status_preference">com.networkpractice.retrofitlogindemo_login_status_preference</string>
 </resources>
